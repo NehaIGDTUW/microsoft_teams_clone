@@ -47,6 +47,10 @@ io.on('connection', socket => {
             // message should be sent to that specific room and no where else
             io.to(roomId).emit('createMessage', message)
         });
+
+        socket.on('disconnect', () => {
+            socket.to(roomId).emit('user-disconnected', userId)
+        })
     })
 })
 server.listen(process.env.PORT || 3030)

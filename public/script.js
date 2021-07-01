@@ -1,16 +1,20 @@
+
+
 const socket = io('/')
 
 const videoGrid = document.getElementById('video-grid')
 const myVideo = document.createElement('video');
 myVideo.muted = true;
+const peers = {}
 
 // create new peer connection
 // undefined is specifying that we don't need a specific id as of now.
-const peer = new Peer(undefined, {
+/*const peer = new Peer(undefined, {
     host: "peerjs-server.herokuapp.com",
     secure: true,
     port: '443'
-});
+});*/
+const peer = new Peer();
 
 
 let myVideoStream
@@ -59,6 +63,11 @@ navigator.mediaDevices.getUserMedia({
     })
 })
 
+socket.on('user-disconnected', userId => {
+    if (peers[userId]) {
+        peers[userId].close()
+    }
+})
 // Here we are saying that we have joined the room
 // and passed on the id to it
 peer.on('open', id => {
@@ -78,6 +87,7 @@ const connectToNewUser = (userId, stream) => {
     call.on('stream', userVideoStream => {
         addVideoStream(video, userVideoStream)
     })
+    peers[userId] = call
 }
 
 const addVideoStream = (video, stream) => {
