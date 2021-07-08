@@ -14,7 +14,11 @@ const peers = {}
     secure: true,
     port: '443'
 });*/
-const peer = new Peer();
+const peer = new Peer(undefined, {
+    host: "peerjs-server.herokuapp.com",
+    secure: true,
+    port: 443
+});
 
 
 let myVideoStream
